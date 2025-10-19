@@ -5,7 +5,7 @@
 
 
 
-A tiny **cubeBot**  built for ROS 2 (Humble / Jazzy) with a differential-drive base and a 2D LiDAR - hoping to make this work well for reinforcement-learning experiments and robotics demos. If there's anything wonky please let me know ...it took me over a month to get this to work, im tired lol
+A tiny **cubeBot**  built for ROS 2 (Humble / Jazzy) with a differential-drive base and a 2D LiDAR - hoping to make this work well for reinforcement-learning experiments and robotics demos. If there's anything wonky please let me know ...it took me a long time to learn all this & getting the basic to work properly - ROS is no joke ya'll lol
 
 It includes:
 - Gazebo Classic world & spawn launch  
