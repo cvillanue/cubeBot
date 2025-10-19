@@ -1,5 +1,8 @@
 # cubeBot: ROS 2 + Gazebo Classic 🤖
 
+![cubeBot2](https://github.com/user-attachments/assets/60069ae2-3253-436c-aa57-dbe5bb9059ae)
+
+
 A tiny **cubeBot**  built for ROS 2 (Humble / Jazzy) with a differential-drive base and a 2D LiDAR - hoping to make this work well for reinforcement-learning experiments and robotics demos. If there's anything wonky please let me know ...it took me over a month to get this to work, im tired lol
 
 It includes:
