@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+<robot name="pink_cube_car" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Materials -->
+  <material name="pink">
+    <color rgba="1.0 0.2 0.6 1.0"/>
+  </material>
+  <material name="black">
+    <color rgba="0.05 0.05 0.05 1.0"/>
+  </material>
+  <material name="gray">
+    <color rgba="0.6 0.6 0.6 1.0"/>
+  </material>
+
+  <!-- Base link -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="3.0"/>
+      <inertia ixx="0.06" ixy="0.0" ixz="0.0" iyy="0.06" iyz="0.0" izz="0.06"/>
+    </inertial>
+
+    <visual>
+      <origin xyz="0 0 0.075" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.30 0.22 0.15"/>
+      </geometry>
+      <material name="pink"/>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0.075" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.30 0.22 0.15"/>
+      </geometry>
+      <surface>
+        <friction>
+          <ode><mu>0.8</mu><mu2>0.8</mu2></ode>
+        </friction>
+      </surface>
+    </collision>
+  </link>
+
+  <!-- Wheels -->
+  <xacro:macro name="wheel" params="name y">
+    <link name="${name}">
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <mass value="0.3"/>
+        <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+      </inertial>
+
+      <visual>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <geometry>
+          <cylinder radius="0.06" length="0.03"/>
+        </geometry>
+        <material name="black"/>
+      </visual>
+
+      <collision>
+        <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+        <geometry>
+          <cylinder radius="0.06" length="0.03"/>
+        </geometry>
+        <surface>
+          <friction>
+            <ode>
+              <mu>1.0</mu>
+              <mu2>1.0</mu2>
+              <slip1>0.0</slip1>
+              <slip2>0.0</slip2>
+            </ode>
+          </friction>
+          <contact>
+            <ode>
+              <kp>1e6</kp>
+              <kd>1.0</kd>
+            </ode>
+          </contact>
+        </surface>
+      </collision>
+    </link>
+
+    <joint name="${name}_joint" type="continuous">
+      <origin xyz="0 ${y} 0.06" rpy="0 0 0"/>
+      <parent link="base_link"/>
+      <child link="${name}"/>
+      <axis xyz="0 1 0"/>
+      <limit effort="8.0" velocity="25.0"/>
+      <dynamics damping="0.2" friction="0.1"/>
+    </joint>
+  </xacro:macro>
+
+  <!-- Left and right wheels -->
+  <xacro:wheel name="left_wheel"  y="0.125"/>
+  <xacro:wheel name="right_wheel" y="-0.125"/>
+
+  <!-- Caster (rear support) -->
+  <link name="caster">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0005" ixy="0" ixz="0" iyy="0.0005" iyz="0" izz="0.0005"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.1 0 0.02" rpy="0 0 0"/>
+      <geometry><sphere radius="0.02"/></geometry>
+      <material name="gray"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.1 0 0.02" rpy="0 0 0"/>
+      <geometry><sphere radius="0.02"/></geometry>
+    </collision>
+  </link>
+
+  <joint name="caster_joint" type="fixed">
+    <origin xyz="-0.1 0 0.02" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="caster"/>
+  </joint>
+
+  <!-- Lidar sensor -->
+  <link name="lidar_link">
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.0002" ixy="0" ixz="0" iyy="0.0002" iyz="0" izz="0.0002"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.1 0 0.16" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.02" length="0.04"/></geometry>
+      <material name="gray"/>
+    </visual>
+    <collision>
+      <origin xyz="0.1 0 0.16" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.02" length="0.04"/></geometry>
+    </collision>
+  </link>
+
+  <joint name="lidar_joint" type="fixed">
+    <origin xyz="0.1 0 0.16" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+  </joint>
+
+  <!-- Diff drive plugin -->
+<!-- Diff drive plugin at MODEL scope -->
+<gazebo>
+  <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+    <ros>
+      <namespace>/</namespace>
+      <remapping>cmd_vel:=cmd_vel</remapping>
+      <remapping>odom:=odom</remapping>
+    </ros>
+
+    <!-- Joints -->
+    <left_joint>left_wheel_joint</left_joint>
+    <right_joint>right_wheel_joint</right_joint>
+
+    <!-- Geometry (NOTE: radius, not diameter) -->
+    <wheel_separation>0.25</wheel_separation>
+    <wheel_radius>0.06</wheel_radius>
+
+    <!-- Topics / Frames -->
+    <cmd_vel_topic>cmd_vel</cmd_vel_topic>
+    <odom_topic>odom</odom_topic>
+    <odometry_frame>odom</odometry_frame>
+    <robot_base_frame>base_link</robot_base_frame>
+
+    <!-- Rates / Outputs -->
+    <update_rate>50</update_rate>
+    <publish_tf>true</publish_tf>
+    <publish_odom>true</publish_odom>
+
+    <!-- Dynamics -->
+    <max_wheel_torque>50.0</max_wheel_torque>
+    <max_wheel_acceleration>6.0</max_wheel_acceleration>
+  </plugin>
+</gazebo>
+
+
+  <!-- Lidar plugin -->
+  <gazebo reference="lidar_link">
+    <sensor name="lidar" type="ray">
+      <always_on>true</always_on>
+      <update_rate>15</update_rate>
+      <visualize>true</visualize>
+      <pose>0 0 0 0 0 0</pose>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159</min_angle>
+            <max_angle>3.14159</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.12</min>
+          <max>8.0</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+      <plugin name="ros_ray" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <namespace>/</namespace>
+          <remapping>~/out:=scan</remapping>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>lidar_link</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</robot>

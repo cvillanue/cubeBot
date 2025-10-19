@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>cubebot</name>
+  <version>0.0.1</version>
+  <description>Cube Bot for Gazebo + ROS 2. Differential drive, lidar, and basic autonomy; set up for RL later.</description>
+  <maintainer email="cvillanue25@gmail.com">Callyn Villanueva</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_py</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>joint_state_publisher</depend>
+  <depend>xacro</depend>
+  <depend>gazebo_ros</depend>
+
+  <exec_depend>ros2launch</exec_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
