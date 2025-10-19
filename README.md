@@ -1,4 +1,4 @@
-# cubeBot: ROS 2 + Gazebo Classic 🤖
+# cubeBot: ROS 2 + Gazebo Classic 
 
 ![cubeBot2](https://github.com/user-attachments/assets/60069ae2-3253-436c-aa57-dbe5bb9059ae)![cubeBot1](https://github.com/user-attachments/assets/89a32c2b-d9b8-4e7d-a4ea-84451d9015a9)
 
@@ -9,7 +9,7 @@ A tiny **cubeBot**  built for ROS 2 (Humble / Jazzy) with a differential-drive b
 
 It includes:
 - Gazebo Classic world & spawn launch  
-- `/cmd_vel` → differential-drive control plugin  
+- `/cmd_vel` -> differential-drive control plugin  
 - `/scan` from simulated LiDAR (`sensor_msgs/LaserScan`)  
 - Basic obstacle-avoidance node  
 - Random-policy node + scan logger for quick RL prototyping  
@@ -59,7 +59,7 @@ ros2 run cubebot random_policy
 
 ## TF Frames
 ```
-odom → base_link → lidar_link
+odom → base_link - >lidar_link
 ```
 
 ---
