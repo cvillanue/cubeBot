@@ -142,40 +142,42 @@
     <child link="lidar_link"/>
   </joint>
 
-<!-- Diff drive plugin (Gazebo Classic) -->
+<!-- Diff drive plugin (Gazebo Classic, ROS 2) -->
+<!-- Gazebo Classic differential drive (gazebo_ros_diff_drive) -->
 <gazebo>
   <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+
+    <!-- ROS2 namespace/remaps (optional) -->
     <ros>
-      <!-- use global namespace; adjust if you want a robot namespace -->
       <namespace>/</namespace>
-      <remapping>cmd_vel:=/cmd_vel</remapping>
-      <remapping>odom:=/odom</remapping>
+      <!-- You can omit remappings if you use the default topics below -->
+      <!-- <remapping>cmd_vel:=/cmd_vel</remapping> -->
+      <!-- <remapping>odom:=/odom</remapping> -->
     </ros>
 
-    <!-- Required joints -->
+    <!-- REQUIRED joints -->
     <left_joint>left_wheel_joint</left_joint>
     <right_joint>right_wheel_joint</right_joint>
 
-    <!-- Geometry (use radius, not diameter) -->
+    <!-- Kinematics (note: *diameter*, not radius) -->
     <wheel_separation>0.25</wheel_separation>
-    <wheel_radius>0.06</wheel_radius>
+    <wheel_diameter>0.12</wheel_diameter>  <!-- 2 * 0.06 m -->
+
+    <!-- Limits (optional) -->
+    <max_wheel_torque>50.0</max_wheel_torque>
+    <max_wheel_acceleration>6.0</max_wheel_acceleration>
 
     <!-- Topics / frames -->
-    <cmd_vel_topic>/cmd_vel</cmd_vel_topic>
-    <odom_topic>/odom</odom_topic>
+    <command_topic>cmd_vel</command_topic>
+    <odometry_topic>odom</odometry_topic>
     <odometry_frame>odom</odometry_frame>
     <robot_base_frame>base_link</robot_base_frame>
 
-    <!-- Behavior / rates -->
+    <!-- Publishing -->
     <update_rate>50</update_rate>
-    <cmd_vel_timeout>0.5</cmd_vel_timeout>
     <publish_odom>true</publish_odom>
-    <publish_tf>true</publish_tf>
+    <publish_odom_tf>true</publish_odom_tf>
     <publish_wheel_tf>false</publish_wheel_tf>
-
-    <!-- Dynamics limits -->
-    <max_wheel_torque>50.0</max_wheel_torque>
-    <max_wheel_acceleration>6.0</max_wheel_acceleration>
   </plugin>
 </gazebo>
 
