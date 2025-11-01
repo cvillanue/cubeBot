@@ -1,34 +1,64 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
   <world name="flat_world">
+    <!-- Physics (stable, 1 kHz sim rate) -->
+    <physics type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <!-- Gravity -->
+    <gravity>0 0 -9.81</gravity>
+
+    <!-- Ground + Sun only (no extra robots/models) -->
     <include>
       <uri>model://ground_plane</uri>
     </include>
     <include>
       <uri>model://sun</uri>
     </include>
-    <!-- Add a few boxes as obstacles -->
+
+    <!-- Obstacles (static so they don't fall) -->
     <model name="box1">
+      <static>true</static>
+      <!-- center at z = half the box height (0.25 for a 0.5m cube) -->
       <pose>1.0 0.0 0.25 0 0 0</pose>
       <link name="link">
         <collision name="collision">
-          <geometry><box><size>0.5 0.5 0.5</size></box></geometry>
+          <geometry>
+            <box><size>0.5 0.5 0.5</size></box>
+          </geometry>
         </collision>
         <visual name="visual">
-          <geometry><box><size>0.5 0.5 0.5</size></box></geometry>
+          <geometry>
+            <box><size>0.5 0.5 0.5</size></box>
+          </geometry>
         </visual>
       </link>
     </model>
+
     <model name="box2">
+      <static>true</static>
       <pose>0.0 1.2 0.25 0 0 0</pose>
       <link name="link">
         <collision name="collision">
-          <geometry><box><size>0.5 0.5 0.5</size></box></geometry>
+          <geometry>
+            <box><size>0.5 0.5 0.5</size></box>
+          </geometry>
         </collision>
         <visual name="visual">
-          <geometry><box><size>0.5 0.5 0.5</size></box></geometry>
+          <geometry>
+            <box><size>0.5 0.5 0.5</size></box>
+          </geometry>
         </visual>
       </link>
     </model>
+
+    <!-- Optional: set initial GUI camera -->
+    <gui fullscreen="0">
+      <camera name="user_camera">
+        <pose>2 -2 2 0.3 0.6 2.35</pose>
+      </camera>
+    </gui>
   </world>
 </sdf>
