@@ -1,0 +1,37 @@
+ROS Tips (for my own sanity):
+
+
+to reset everything: rm -rf ~/ros2_ws
+then recreate:
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws
+
+--------------- 
+cubeBOT
+----------------------------
+
+ALWAYS START HERE
+# 1) Kill anything stale and free the port
+pkill -f spawn_entity.py 2>/dev/null
+pkill -9 gzserver gzclient gazebo 2>/dev/null
+fuser -k 11345/tcp 2>/dev/null || true
+
+# 2) Rebuild and relaunch
+# Clean build + source
+cd ~/ros2_ws
+rm -rf build/ install/ log/
+colcon build --packages-select cubebot --event-handlers console_direct+
+source install/setup.bash
+
+
+# RUNNN DIS
+ros2 launch cubebot cubebot_sim.launch.py
+
+
+------------IN TERMINAL 2 TO LAUNCH RL----------
+cd ~/ros2_ws && source install/setup.bash
+ros2 run cubebot reward_logger  # optional
+ros2 run cubebot obstacle_avoider --ros-args \
+  -p v_fwd:=0.18 -p turn_speed:=1.0 -p w_gain:=2.0 \
+  -p min_safe:=0.20 -p front_safe:=0.35 \
+  -p stuck_eps:=0.03 -p stuck_ticks:=12 -p recover_secs:=0.8
